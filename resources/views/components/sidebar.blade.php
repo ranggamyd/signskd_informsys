@@ -54,8 +54,16 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link" href="/logout">
-                    <i class="fas fa-sign-out-alt"></i> <span>Keluar</span>
+                <a class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="border-0 ml-0 pl-0 bg-transparent" style="color: #78828a">
+                                Keluar
+                            </button>
+                        </form>
+                    </span>
                 </a>
             </li>
     </aside>
