@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Partner;
-use App\Models\Patient;
-
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class PatientController extends Controller
+use App\Models\Partner;
+
+class PartnerController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -26,12 +24,7 @@ class PatientController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-
-        if ($user->partner_id) {
-            return view('patient', ['patients' => Patient::where('partner_id', $user->partner_id)->get(), 'partners' => Partner::latest()->get()]);
-        }
-        return view('patient', ['patients' => Patient::latest()->get(), 'partners' => Partner::latest()->get()]);
+        return view('partner', ['partners' => Partner::latest()->get()]);
     }
 
     /**
@@ -48,29 +41,29 @@ class PatientController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nik' => 'nullable|unique:patients',
-            'nama' => 'required',
-            'telepon' => 'nullable|unique:patients',
+            'nama_mitra' => 'required|unique:partners',
+            'alamat' => 'required',
+            'keterangan' => 'nullable',
         ]);
 
         if ($validator->fails()) {
             $errors = $validator->errors();
             $errors->add('create', 'Error in create modal field.');
 
-            return redirect('/patient')
+            return redirect('/partner')
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        Patient::create($request->all());
+        Partner::create($request->all());
 
-        return redirect('/patient')->with('success', 'Data berhasil disimpan.');
+        return redirect('/partner')->with('success', 'Data berhasil disimpan.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Patient $patient)
+    public function show(Partner $partner)
     {
         //
     }
@@ -78,7 +71,7 @@ class PatientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Patient $patient)
+    public function edit(Partner $partner)
     {
         //
     }
@@ -86,40 +79,40 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Patient $patient)
+    public function update(Request $request, Partner $partner)
     {
         $validator = Validator::make($request->all(), [
-            'nik' => 'nullable|unique:patients,nik,' . $patient->id,
-            'nama' => 'required',
-            'telepon' => 'nullable|unique:patients,telepon,' . $patient->id,
+            'nama_mitra' => 'required|unique:partners,' . $partner->id,
+            'alamat' => 'required',
+            'keterangan' => 'nullable',
         ]);
 
         if ($validator->fails()) {
             $errors = $validator->errors();
-            $errors->add('edit', $patient->id);
+            $errors->add('edit', $partner->id);
 
-            return redirect('/patient')
+            return redirect('/partner')
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        $patient->update($request->all());
+        $partner->update($request->all());
 
-        return redirect('/patient')->with('success', 'Data berhasil disimpan.');
+        return redirect('/partner')->with('success', 'Data berhasil disimpan.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient)
+    public function destroy(Partner $partner)
     {
-        $patient->destroy($patient->id);
+        $partner->destroy($partner->id);
 
-        return redirect('/patient')->with('success', 'Data berhasil dihapus.');
+        return redirect('/partner')->with('success', 'Data berhasil dihapus.');
     }
 
     public function create_skd($id)
     {
-        return redirect('/skd')->with('create_with_patient', $id);
+        return redirect('/skd')->with('create_with_partner', $id);
     }
 }

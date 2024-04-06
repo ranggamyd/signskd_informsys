@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['Administrator', 'HRD'])->default('Administrator');
+            $table->foreignId('partner_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -5,6 +5,7 @@
 @push('style')
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="{{ asset('library/datatables/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/buttons.min.css') }}">
 @endpush
 
 @section('main')
@@ -47,7 +48,8 @@
                                             @foreach ($skds as $item)
                                                 <tr>
                                                     <th class="text-center">{{ $loop->index + 1 }}</th>
-                                                    <td class="text-center"><span class="badge">{{ $item->no_surat }}</span></td>
+                                                    <td class="text-center"><span
+                                                            class="badge">{{ $item->no_surat }}</span></td>
                                                     <td>{{ $item->patient->nama }}</td>
                                                     <td>{{ $item->diagnosa }}</td>
                                                     <td>{{ $item->doctor->nama }}</td>
@@ -66,8 +68,8 @@
                                                                 onclick="return confirm('Apakah anda yakin?')"
                                                                 title="Sign SKD"><i class="fas fa-qrcode"></i></a>
                                                             <div class="dropdown d-inline">
-                                                                <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                    data-toggle="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle"
+                                                                    type="button" data-toggle="dropdown">
                                                                     Opsi
                                                                 </button>
                                                                 <div class="dropdown-menu">
@@ -311,10 +313,45 @@
 @push('scripts')
     <!-- JS Libraies -->
     <script src="{{ asset('library/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/jszip/jszip.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/pdfmake/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/pdfmake/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/buttons.colVis.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
     <script>
-        $("#skd_table").dataTable();
+        $('#skd_table').DataTable({
+            "lengthChange": false,
+            "buttons": [{
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel mr-2"></i>Excel',
+                    className: 'btn btn-success',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf mr-2"></i>PDF',
+                    className: 'btn btn-danger',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print mr-2"></i>Print',
+                    className: 'btn btn-info',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+            ]
+        }).buttons().container().appendTo('#skd_table_wrapper .col-md-6:eq(0)');
 
         @error('create')
             $("#create_skd").modal("show");

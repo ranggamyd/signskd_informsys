@@ -18,6 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $guarded = ['id'];
+    protected $load = ['partner'];
+
+    function partner()
+    {
+        return $this->belongsTo(Partner::class, 'partner_id')->withDefault();
+    }
 
     /**
      * The attributes that should be hidden for serialization.

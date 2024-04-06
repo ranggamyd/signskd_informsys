@@ -6,6 +6,7 @@ use App\Http\Controllers\SKDController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SignedSKDController;
 
@@ -30,6 +31,8 @@ Route::get('/dashboard', [DashboardController::class, 'index']);
 // Patient
 Route::resource('/patient', PatientController::class);
 Route::get('/patient/create_skd/{id}', [PatientController::class, 'create_skd']);
+// Patient
+Route::resource('/partner', PartnerController::class);
 // Doctor
 Route::resource('/doctor', DoctorController::class);
 // SKD

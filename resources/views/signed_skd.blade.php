@@ -5,6 +5,7 @@
 @push('style')
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="{{ asset('library/datatables/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/buttons.min.css') }}">
 @endpush
 
 @section('main')
@@ -46,9 +47,12 @@
                                             @foreach ($signed_skds as $item)
                                                 <tr>
                                                     <th class="text-center align-middle">{{ $loop->index + 1 }}</th>
-                                                    <td class="text-center align-middle"><span class="bage">{{ $item->skd->no_surat }}</span></td>
+                                                    <td class="text-center align-middle"><span
+                                                            class="bage">{{ $item->skd->no_surat }}</span></td>
                                                     <td class="align-middle">{{ $item->skd->patient->nama }}</td>
-                                                    <td class="text-center align-middle"><span class="badge">{{ date('d M Y', strtotime($item->created_at)) }}</span></td>
+                                                    <td class="text-center align-middle"><span
+                                                            class="badge">{{ date('d M Y', strtotime($item->created_at)) }}</span>
+                                                    </td>
                                                     <td class="align-middle">{{ $item->skd->doctor->nama }}</td>
                                                     {{-- <td class="text-center align-middle">{{ $item->hash }}</td> --}}
                                                     <td class="text-center align-middle">{!! QrCode::size(50)->generate(route('signed_skd.check', base64_encode($item->hash))) !!}</td>
@@ -97,9 +101,44 @@
 @push('scripts')
     <!-- JS Libraies -->
     <script src="{{ asset('library/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/buttons.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/jszip/jszip.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/pdfmake/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/pdfmake/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('js/plugin/datatables/buttons.colVis.min.js') }}"></script>
 
     <!-- Page Specific JS File -->
     <script>
-        $("#skd_table").dataTable();
+        $('#skd_table').DataTable({
+            "lengthChange": false,
+            "buttons": [{
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel mr-2"></i>Excel',
+                    className: 'btn btn-success',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf mr-2"></i>PDF',
+                    className: 'btn btn-danger',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print mr-2"></i>Print',
+                    className: 'btn btn-info',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+            ]
+        }).buttons().container().appendTo('#skd_table_wrapper .col-md-6:eq(0)');
     </script>
 @endpush

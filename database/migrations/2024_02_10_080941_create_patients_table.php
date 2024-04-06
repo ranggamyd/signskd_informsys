@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('tanggal_lahir')->nullable();
             $table->string('telepon')->nullable();
             $table->string('pekerjaan')->nullable();
+            $table->foreignId('partner_id')->nullable();
             $table->string('alamat')->nullable();
             $table->timestamps();
         });

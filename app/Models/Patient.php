@@ -10,4 +10,10 @@ class Patient extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    protected $load = ['partner'];
+
+    function partner()
+    {
+        return $this->belongsTo(Partner::class, 'partner_id')->withDefault();
+    }
 }

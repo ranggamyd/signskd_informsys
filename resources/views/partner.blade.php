@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Kelola Dokter')
+@section('title', 'Kelola Mitra')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -12,10 +12,10 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Kelola Dokter</h1>
+                <h1>Kelola Mitra</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="/doctor">Dokter</a></div>
+                    <div class="breadcrumb-item"><a href="/partner">Mitra</a></div>
                     <div class="breadcrumb-item">Index</div>
                 </div>
             </div>
@@ -25,55 +25,54 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#create_doctor">
-                                    <i class="fas fa-plus mr-2"></i>Tambah Dokter
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#create_partner">
+                                    <i class="fas fa-plus mr-2"></i>Tambah Mitra
                                 </button>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-hover" id="doctor_table">
+                                    <table class="table table-striped table-hover" id="partner_table">
                                         <thead>
                                             <tr class="text-center">
                                                 <th class="text-center">#</th>
-                                                <th>Nama Dokter</th>
-                                                <th>Spesialis</th>
-                                                <th>E-Mail</th>
-                                                <th>No. Telepon</th>
+                                                <th>Nama Perusahaan</th>
                                                 <th>Alamat</th>
+                                                <th>Keterangan</th>
                                                 <th><span class="sr-only">Opsi</span></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($doctors as $item)
+                                            @foreach ($partners as $item)
                                                 <tr>
                                                     <th class="text-center">{{ $loop->index + 1 }}</th>
-                                                    <td>{{ $item->nama }}</td>
-                                                    <td class="text-center">{{ $item->spesialis }}</td>
-                                                    <td>{{ $item->email }}</td>
-                                                    <td class="text-center"><span class="bage">{{ $item->telepon }}</span></td>
+                                                    <td>{{ $item->nama_mitra }}</td>
                                                     <td>{{ $item->alamat }}</td>
+                                                    <td class="text-center">{{ $item->keterangan ?: '-' }}</td>
                                                     <td class="text-center">
-                                                        <div class="dropdown d-inline">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-toggle="dropdown">
-                                                                Opsi
-                                                            </button>
-                                                            <div class="dropdown-menu">
-                                                                <button
-                                                                    class="dropdown-item has-icon d-flex align-items-center"
-                                                                    data-toggle="modal"
-                                                                    data-target="#edit_doctor_{{ $item->id }}">
-                                                                    <i class="fas fa-edit"></i>Edit Dokter
+                                                        <div class="btn-group">
+                                                            <div class="dropdown d-inline">
+                                                                <button class="btn btn-primary dropdown-toggle"
+                                                                    type="button" data-toggle="dropdown">
+                                                                    Opsi
                                                                 </button>
-                                                                <form action="/doctor/{{ $item->id }}" method="POST">
-                                                                    @csrf
-                                                                    @method('delete')
-                                                                    <button type="submit"
+                                                                <div class="dropdown-menu">
+                                                                    <button
                                                                         class="dropdown-item has-icon d-flex align-items-center"
-                                                                        onclick="return confirm('Apakah anda yakin?')">
-                                                                        <i class="fas fa-trash"></i>Hapus Dokter
+                                                                        data-toggle="modal"
+                                                                        data-target="#edit_partner_{{ $item->id }}">
+                                                                        <i class="fas fa-edit"></i>Edit Mitra
                                                                     </button>
-                                                                </form>
+                                                                    <form action="/partner/{{ $item->id }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('delete')
+                                                                        <button type="submit"
+                                                                            class="dropdown-item has-icon d-flex align-items-center"
+                                                                            onclick="return confirm('Apakah anda yakin?')">
+                                                                            <i class="fas fa-trash"></i>Hapus Mitra
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -92,20 +91,20 @@
 @endsection
 
 @push('modals')
-    <div class="modal fade" tabindex="-1" role="dialog" id="create_doctor">
+    <div class="modal fade" tabindex="-1" role="dialog" id="create_partner">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Dokter</h5>
+                    <h5 class="modal-title">Tambah Mitra</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="/doctor" method="POST">
+                <form action="/partner" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Nama Dokter</label>
+                            <label>Nama Mitra</label>
                             <input type="text" name="nama" value="{{ old('nama') }}"
                                 class="form-control @error('nama') is-invalid @enderror">
                             @error('nama')
@@ -113,39 +112,16 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Spesialis</label>
-                            <input type="text" name="spesialis" value="{{ old('spesialis') }}"
-                                class="form-control @error('spesialis') is-invalid @enderror">
-                            @error('spesialis')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label>E-Mail</label>
-                                    <input type="email" name="email" value="{{ old('email') }}"
-                                        class="form-control @error('email') is-invalid @enderror">
-                                    @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label>No. Telepon</label>
-                                    <input type="text" name="telepon" value="{{ old('telepon') }}"
-                                        class="form-control @error('telepon') is-invalid @enderror">
-                                    @error('telepon')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label>Alamat</label>
                             <textarea name="alamat" class="form-control @error('alamat') is-invalid @enderror">{{ old('alamat') }}</textarea>
                             @error('alamat')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label>Keterangan</label>
+                            <textarea name="keterangan" class="form-control @error('keterangan') is-invalid @enderror">{{ old('keterangan') }}</textarea>
+                            @error('keterangan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -160,22 +136,22 @@
         </div>
     </div>
 
-    @foreach ($doctors as $item)
-        <div class="modal fade" tabindex="-1" role="dialog" id="edit_doctor_{{ $item->id }}">
+    @foreach ($partners as $item)
+        <div class="modal fade" tabindex="-1" role="dialog" id="edit_partner_{{ $item->id }}">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Dokter</h5>
+                        <h5 class="modal-title">Edit Mitra</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="/doctor/{{ $item->id }}" method="POST">
+                    <form action="/partner/{{ $item->id }}" method="POST">
                         @csrf
                         @method('put')
                         <div class="modal-body">
                             <div class="form-group">
-                                <label>Nama Dokter</label>
+                                <label>Nama Mitra</label>
                                 <input type="text" name="nama" value="{{ old('nama', $item->nama) }}"
                                     class="form-control @error('nama') is-invalid @enderror">
                                 @error('nama')
@@ -183,40 +159,16 @@
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label>Spesialis</label>
-                                <input type="text" name="spesialis" value="{{ old('spesialis', $item->spesialis) }}"
-                                    class="form-control @error('spesialis') is-invalid @enderror">
-                                @error('spesialis')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>E-Mail</label>
-                                        <input type="email" name="email" value="{{ old('email', $item->email) }}"
-                                            class="form-control @error('email') is-invalid @enderror">
-                                        @error('email')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label>No. Telepon</label>
-                                        <input type="text" name="telepon"
-                                            value="{{ old('telepon', $item->telepon) }}"
-                                            class="form-control @error('telepon') is-invalid @enderror">
-                                        @error('telepon')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label>Alamat</label>
                                 <textarea name="alamat" class="form-control @error('alamat') is-invalid @enderror">{{ old('alamat', $item->alamat) }}</textarea>
                                 @error('alamat')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label>Keterangan</label>
+                                <textarea name="keterangan" class="form-control @error('keterangan') is-invalid @enderror">{{ old('keterangan', $item->keterangan) }}</textarea>
+                                @error('keterangan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -248,7 +200,7 @@
 
     <!-- Page Specific JS File -->
     <script>
-        $('#doctor_table').DataTable({
+        $('#partner_table').DataTable({
             "lengthChange": false,
             "buttons": [{
                     extend: 'excel',
@@ -275,14 +227,14 @@
                     }
                 },
             ]
-        }).buttons().container().appendTo('#doctor_table_wrapper .col-md-6:eq(0)');
+        }).buttons().container().appendTo('#partner_table_wrapper .col-md-6:eq(0)');
 
         @error('create')
-            $("#create_doctor").modal("show");
+            $("#create_partner").modal("show");
         @enderror
 
         @error('edit')
-            $("#edit_doctor_{{ $message }}").modal("show");
+            $("#edit_partner_{{ $message }}").modal("show");
         @enderror
     </script>
 @endpush

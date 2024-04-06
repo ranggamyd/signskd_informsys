@@ -89,21 +89,18 @@ class SignedSKDController extends Controller
         $hash = base64_decode($hash);
         $signed_skd = SignedSKD::where('hash', $hash)->first();
 
-        if (Hash::check($signed_skd->skd->no_surat, $hash)) {
-            session()->flash('success', 'Selamat, SKD anda valid.');
+        if (!empty($signed_skd)) {
+            if (Hash::check($signed_skd->skd->no_surat, $hash)) {
+                session()->flash('success', 'Selamat, SKD anda valid.');
 
-            return view('check_skd', [
-                'signed_skd' => $signed_skd,
-                'patients' => Patient::latest()->get(),
-                'doctors' => Doctor::orderBy('nama')->get(),
-            ]);
+                return view('check_skd', [
+                    'signed_skd' => $signed_skd,
+                    'patients' => Patient::latest()->get(),
+                    'doctors' => Doctor::orderBy('nama')->get(),
+                ]);
+            };
         };
 
-        $this->failed();
-    }
-
-    public function failed()
-    {
         session()->flash('error', 'Maaf, SKD anda tidak valid..');
 
         return view('check_skd');

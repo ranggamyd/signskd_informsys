@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -26,7 +27,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user', ['users' => User::orderBy('name')->get()]);
+        $user = Auth::user();
+
+        return view($user->partner_id ? 'user_mitra' : 'user', ['users' => User::orderBy('name')->get()]);
     }
 
     /**
@@ -74,6 +77,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user = Auth::user();
+
+        if ($user->partner_id) return redirect('/user')->with('show_profile', $user);
+
         return redirect('/user')->with('show_profile', $user);
     }
 
@@ -82,6 +89,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $user = Auth::user();
+
+        if ($user->partner_id) return redirect('/user')->with('show_profile', $user);
+
         return redirect('/user')->with('update_profile', $user);
     }
 

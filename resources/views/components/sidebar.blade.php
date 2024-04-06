@@ -16,55 +16,93 @@
                     <i class="fas fa-fire"></i> <span>Dashboard</span>
                 </a>
             </li>
-            <li class="menu-header">Master Data</li>
-            <li class="{{ Request::is('patient') ? 'active' : '' }}">
-                <a class="nav-link" href="/patient">
-                    <i class="fas fa-procedures"></i> <span>Kelola Pasien</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('skd') ? 'active' : '' }}">
-                <a class="nav-link" href="/skd">
-                    <i class="fas fa-envelope-open-text"></i> <span>Registrasi SKD</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('signed_skd') ? 'active' : '' }}">
-                <a class="nav-link" href="/signed_skd">
-                    <i class="fas fa-qrcode"></i> <span>Signed SKD</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('doctor') ? 'active' : '' }}">
-                <a class="nav-link" href="/doctor">
-                    <i class="fas fa-user-md"></i> <span>Kelola Dokter</span>
-                </a>
-            </li>
-            <li class="menu-header">Additionals</li>
-            <li class="{{ Request::is('user') ? 'active' : '' }}">
-                <a class="nav-link" href="/user">
-                    <i class="fas fa-users-cog"></i> <span>Kelola User</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('user/{id}') ? 'active' : '' }}">
-                <a class="nav-link" href="/user/1">
-                    <i class="far fa-address-card"></i> <span>Profil Saya</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('user/{id}/edit') ? 'active' : '' }}">
-                <a class="nav-link" href="/user/1/edit">
-                    <i class="fas fa-cog"></i> <span>Update Profil</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-link">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="border-0 ml-0 pl-0 bg-transparent" style="color: #78828a">
-                                Keluar
-                            </button>
-                        </form>
-                    </span>
-                </a>
-            </li>
+            @if (!Auth::user()->partner_id)
+                <li class="menu-header">Master Data</li>
+                <li class="{{ Request::is('patient') ? 'active' : '' }}">
+                    <a class="nav-link" href="/patient">
+                        <i class="fas fa-procedures"></i> <span>Kelola Pasien</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('partner') ? 'active' : '' }}">
+                    <a class="nav-link" href="/partner">
+                        <i class="fas fa-procedures"></i> <span>Kelola Mitra</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('skd') ? 'active' : '' }}">
+                    <a class="nav-link" href="/skd">
+                        <i class="fas fa-envelope-open-text"></i> <span>Registrasi SKD</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('signed_skd') ? 'active' : '' }}">
+                    <a class="nav-link" href="/signed_skd">
+                        <i class="fas fa-qrcode"></i> <span>Signed SKD</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('doctor') ? 'active' : '' }}">
+                    <a class="nav-link" href="/doctor">
+                        <i class="fas fa-user-md"></i> <span>Kelola Dokter</span>
+                    </a>
+                </li>
+                <li class="menu-header">Additionals</li>
+                <li class="{{ Request::is('user') ? 'active' : '' }}">
+                    <a class="nav-link" href="/user">
+                        <i class="fas fa-users-cog"></i> <span>Kelola User</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('user/{id}') ? 'active' : '' }}">
+                    <a class="nav-link" href="/user/1">
+                        <i class="far fa-address-card"></i> <span>Profil Saya</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('user/{id}/edit') ? 'active' : '' }}">
+                    <a class="nav-link" href="/user/1/edit">
+                        <i class="fas fa-cog"></i> <span>Update Profil</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="border-0 ml-0 pl-0 bg-transparent" style="color: #78828a">
+                                    Keluar
+                                </button>
+                            </form>
+                        </span>
+                    </a>
+                </li>
+            @else
+                <li class="menu-header">Master Data</li>
+                <li class="{{ Request::is('patient') ? 'active' : '' }}">
+                    <a class="nav-link" href="/patient">
+                        <i class="fas fa-procedures"></i> <span>Data Karyawan</span>
+                    </a>
+                </li>
+                <li class="menu-header">Additionals</li>
+                <li class="{{ Request::is('user/{id}') ? 'active' : '' }}">
+                    <a class="nav-link" href="/user/{{ Auth::user()->id }}">
+                        <i class="far fa-address-card"></i> <span>Profil Saya</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('user/{id}/edit') ? 'active' : '' }}">
+                    <a class="nav-link" href="/user/{{ Auth::user()->id }}/edit">
+                        <i class="fas fa-cog"></i> <span>Update Profil</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="border-0 ml-0 pl-0 bg-transparent" style="color: #78828a">
+                                    Keluar
+                                </button>
+                            </form>
+                        </span>
+                    </a>
+                </li>
+            @endif
     </aside>
 </div>

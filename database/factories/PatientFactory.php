@@ -25,6 +25,7 @@ class PatientFactory extends Factory
             'tanggal_lahir' => fake()->date(),
             'telepon' => fake()->phoneNumber(),
             'pekerjaan' => fake()->jobTitle(),
+            'partner_id' => mt_rand(1, 3),
             'alamat' => fake()->address(),
         ];
     }
